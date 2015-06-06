@@ -1,0 +1,16 @@
+^.idea/
+^build/
+^dist/
+^durotar.egg-info/
+^venv/
+.DS_Store
+
+syntax: glob
+*.swp
+*.o
+*.so
+*.pyc
+*.pyo
+*.pyd
+*.cover
+*~
