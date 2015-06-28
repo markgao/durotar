@@ -17,6 +17,7 @@ import durotar
 from durotar import template
 from durotar import tornpg
 from durotar.util import import_module, load_class
+from durotar.filters import space_compress
 from durotar.route import Route
 
 
@@ -91,8 +92,9 @@ class RequestHandler(tornado.web.RequestHandler):
         """
         context = self._apply_context_processors(kwargs)
 
-        return super(RequestHandler, self).render_string(template_name,
-                                                             **context)
+        content = super(RequestHandler, self).render_string(template_name,
+                                                            **context)
+        return space_compress(content)
 
     def create_template_loader(self, template_path):
         """Returns a new mako template loader for the given path.
