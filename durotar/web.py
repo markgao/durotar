@@ -80,7 +80,7 @@ class RequestHandler(tornado.web.RequestHandler):
         context.update(kwargs)
 
         for processor in self.application.context_processors:
-            context.update(processor(self))
+            context.update({processor.__name__: processor(self)})
 
         return context
 
