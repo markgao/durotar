@@ -106,12 +106,14 @@ class RequestHandler(tornado.web.RequestHandler):
         settings = self.application.settings
         if 'template_loader' in settings:
             return settings['template_loader']
+
+        module_path = settings.get('mako_module_path', "/tmp/mako_module")
         kwargs = {}
         if 'autoescape' in settings:
             # autoescape=None means "no escaping", so we have to be sure
             # to only pass this kwargs if the user asked for i.
             kwargs['autoescape'] = settings['autoescape']
-        return template.MakoLoader(template_path, **kwargs)
+        return template.MakoLoader(template_path, module_path, **kwargs)
 
     def clear(self):
         """Resets all headers and content for this response."""

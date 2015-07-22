@@ -16,13 +16,14 @@ from mako.lookup import TemplateLookup
 class MakoLoader(Loader):
     """A Mako template loader that loads from a single root directory.
     """
-    def __init__(self, root_directory, **kwargs):
+    def __init__(self, root_directory, module_directory, **kwargs):
         super(MakoLoader, self).__init__(root_directory, **kwargs)
         self.root = os.path.abspath(root_directory)
+        self.module = os.path.abspath(module_directory)
 
     def _create_template(self, name):
         _lookup = TemplateLookup(directories=[self.root],
-            module_directory='/tmp/mako_module', input_encoding='utf-8',
+            module_directory=self.module, input_encoding='utf-8',
             output_encoding='utf-8', encoding_errors='replace')
         template = _lookup.get_template(name)
         template.generate = template.render
