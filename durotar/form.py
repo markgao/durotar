@@ -30,9 +30,10 @@ class Form(formencode.Schema):
 
     _xsrf = validators.String(not_empty=True, max=54)
 
-    def __init__(self, RequestHandler):
+    def __init__(self, RequestHandler, **kwargs):
         super(Form, self).__init__()
-        self._args = {}
+        self._args = kwargs
+        self._data = {}
         self._fields = {}
         self._form_errors = {}
         self._errors = {}
@@ -52,21 +53,25 @@ class Form(formencode.Schema):
 
         for k, v in arguments.iteritems():
             if len(v) == 1:
-                self._args[k] = v[0]
+                self._data[k] = v[0]
             else:
                 # keep a list of values as list (or set)
-                self._args[k] = v
+                self._data[k] = v
 
         self._handler = RequestHandler
         self._result = True
 
     @property
-    def args(self):
-        return self._args
+    def data(self):
+        return self._data
 
     @property
-    def params(self):
+    def fields(self):
         return self._fields
+
+    @property
+    def args(self):
+        return self._args
 
     @property
     def errors(self):
@@ -79,7 +84,7 @@ class Form(formencode.Schema):
     def validate(self):
         self._result = True
         try:
-            self._fields = self.to_python(self._args)
+            self._fields = self.to_python(self._data)
         except formencode.Invalid, e:
             self._fields = e.value
             self._form_errors = e.error_dict or {}
@@ -101,7 +106,7 @@ class Form(formencode.Schema):
         html = self._handler.render_string(template_name, **kwargs)
         if not self._result:
             html = htmlfill.render(html,
-                defaults=self._args, errors=self._form_errors, encoding="utf8")
+                defaults=self._data, errors=self._form_errors, encoding="utf8")
         self._handler.finish(html)
 
     def __after__(self):
