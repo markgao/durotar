@@ -9,7 +9,6 @@ import re
 
 import formencode
 from formencode import validators, htmlfill
-from tornado.escape import _unicode
 
 
 class Form(formencode.Schema):
@@ -50,12 +49,13 @@ class Form(formencode.Schema):
             arguments = request.body_arguments
 
         for k, v in arguments.iteritems():
-            v = map(RequestHandler.decode_argument, v)
             if len(v) == 1:
-                self._formdata[k] = v[0]
+                self._formdata[k] = \
+                        RequestHandler._get_argument(k, [], arguments, False)
             else:
                 # keep a list of values as list (or set)
-                self._formdata[k] = v
+                self._formdata[k] = \
+                            RequestHandler._get_arguments(k, arguments, False)
 
         self._handler = RequestHandler
         self._result = True
@@ -112,15 +112,6 @@ class Form(formencode.Schema):
         """A process hook after validate
         """
         pass
-
-
-def decode_argument(value, name=None):
-    """Decodes an argument from the request.
-    """
-    try:
-        return _unicode(value)
-    except UnicodeDecodeError:
-        return value
 
 
 class URL(validators.URL):
