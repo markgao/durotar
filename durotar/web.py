@@ -9,6 +9,7 @@ import time
 
 import tornado.web
 import tornado.options
+import tornado.escape
 
 from tornado import httputil
 from tornado.log import access_log, app_log, gen_log
@@ -91,6 +92,7 @@ class RequestHandler(tornado.web.RequestHandler):
         write a template as a response, use render() above.
         """
         context = self._apply_context_processors(kwargs)
+        context['escape'] = tornado.escape
 
         content = super(RequestHandler, self).render_string(template_name,
                                                             **context)
