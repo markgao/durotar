@@ -27,8 +27,6 @@ class Form(formencode.Schema):
     # return by `_after_` method
     after_result = None
 
-    _xsrf = validators.String(not_empty=True, max=54)
-
     def __init__(self, RequestHandler, **kwargs):
         super(Form, self).__init__()
         self._args = kwargs

@@ -179,6 +179,7 @@ class WechatMpMixin(WechatMixin):
             'refresh_token': args.get('refresh_token'),
             'openid': args.get('openid'),
             'scope': args.get('scope'),
+            'unionid': args.get('unionid')
         }
 
         future.set_result(session)
@@ -241,6 +242,7 @@ class WechatMpMixin(WechatMixin):
             'refresh_token': args.get('refresh_token'),
             'openid': args.get('openid'),
             'scope': args.get('scope'),
+            'unionid': args.get('unionid')
         }
 
         self.wechat_request(
